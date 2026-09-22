@@ -4,6 +4,7 @@ export type SubjectId =
   | 'usHistory'
   | 'computerScience'
   | 'chemistry'
+  | 'physics'
 
 export interface Question {
   id: string
@@ -20,6 +21,15 @@ export interface Monster {
   hp: number
 }
 
+export type Direction = 'up' | 'down' | 'left' | 'right'
+
+export interface FbdCategory {
+  label: string
+  units: string[]
+}
+
+export type BattleStyle = 'quiz' | 'fbd'
+
 export interface Subject {
   id: SubjectId
   name: string
@@ -32,17 +42,21 @@ export interface Subject {
   zoneDescription: string
   mapPosition: { x: number; y: number }
   monsters: Monster[]
+  battleStyle: BattleStyle
+  fbdCategories?: Record<Direction, FbdCategory>
 }
 
-export type AvatarId = 'mage' | 'warrior' | 'ranger' | 'scholar'
+export type Gender = 'male' | 'female' | 'nonbinary'
+export type HeightOption = 'short' | 'average' | 'tall'
+export type HairStyle = 'bald' | 'short' | 'long' | 'ponytail' | 'curly' | 'mohawk'
 
-export interface AvatarClass {
-  id: AvatarId
-  name: string
-  emoji: string
-  description: string
-  bonusHp: number
-  bonusAttack: number
+export interface Appearance {
+  gender: Gender
+  height: HeightOption
+  skinTone: string
+  hairStyle: HairStyle
+  hairColor: string
+  outfitColor: string
 }
 
 export interface SubjectMastery {
@@ -54,7 +68,7 @@ export interface SubjectMastery {
 
 export interface Player {
   name: string
-  avatar: AvatarId
+  appearance: Appearance
   level: number
   xp: number
   xpToNext: number
@@ -67,14 +81,17 @@ export interface Player {
 }
 
 export type BattleQuestionResult = 'correct' | 'incorrect' | null
+export type BattlePhase = 'select' | 'question'
 
 export interface BattleState {
   subjectId: SubjectId
   monster: Monster
   monsterHp: number
   monsterMaxHp: number
-  questions: Question[]
-  questionIndex: number
+  phase: BattlePhase
+  currentQuestion: Question | null
+  usedQuestionIds: string[]
+  lastDirection: Direction | null
   streak: number
   selectedChoice: number | null
   result: BattleQuestionResult
@@ -85,6 +102,7 @@ export interface BattleState {
 
 export type Screen =
   | 'title'
+  | 'intro'
   | 'create'
   | 'overworld'
   | 'battle'

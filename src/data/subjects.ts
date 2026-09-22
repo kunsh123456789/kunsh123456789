@@ -1,4 +1,4 @@
-import type { AvatarClass, Subject } from '../types'
+import type { Subject } from '../types'
 
 export const MAP_WIDTH = 13
 export const MAP_HEIGHT = 9
@@ -16,6 +16,7 @@ export const SUBJECTS: Subject[] = [
     zoneName: 'Verdant Genome Forest',
     zoneDescription: 'Cells, evolution, and ecosystems lurk between the trees.',
     mapPosition: { x: 2, y: 2 },
+    battleStyle: 'quiz',
     monsters: [
       { name: 'Mitosis Mite', emoji: '🦠', hp: 30 },
       { name: 'Photosynthesis Treant', emoji: '🌳', hp: 40 },
@@ -33,6 +34,7 @@ export const SUBJECTS: Subject[] = [
     zoneName: 'Derivative Peaks',
     zoneDescription: 'A jagged summit where limits and slopes rule the air.',
     mapPosition: { x: 10, y: 2 },
+    battleStyle: 'quiz',
     monsters: [
       { name: 'Limit Golem', emoji: '🗿', hp: 32 },
       { name: 'Tangent Gargoyle', emoji: '🦇', hp: 42 },
@@ -50,6 +52,7 @@ export const SUBJECTS: Subject[] = [
     zoneName: 'Bunsen Burner Bog',
     zoneDescription: 'Bubbling reactions and volatile compounds swirl in the mist.',
     mapPosition: { x: 6, y: 1 },
+    battleStyle: 'quiz',
     monsters: [
       { name: 'Mole Rat', emoji: '🐀', hp: 28 },
       { name: 'Bonding Beast', emoji: '👾', hp: 40 },
@@ -67,6 +70,7 @@ export const SUBJECTS: Subject[] = [
     zoneName: 'Founding Fathers Keep',
     zoneDescription: 'A grand castle where centuries of American history are guarded.',
     mapPosition: { x: 2, y: 6 },
+    battleStyle: 'quiz',
     monsters: [
       { name: 'Colonial Sentry', emoji: '🛡️', hp: 30 },
       { name: 'Revolution Redcoat', emoji: '🎖️', hp: 42 },
@@ -84,46 +88,36 @@ export const SUBJECTS: Subject[] = [
     zoneName: 'Recursion Caverns',
     zoneDescription: 'Loops within loops echo through these glowing tunnels.',
     mapPosition: { x: 10, y: 6 },
+    battleStyle: 'quiz',
     monsters: [
       { name: 'Null Pointer Ghost', emoji: '👻', hp: 30 },
       { name: 'Infinite Loop Hydra', emoji: '🐙', hp: 44 },
       { name: 'Stack Overflow Kraken', emoji: '🦑', hp: 58 },
     ],
   },
-]
-
-export const AVATAR_CLASSES: AvatarClass[] = [
   {
-    id: 'mage',
-    name: 'Logic Mage',
-    emoji: '🧙',
-    description: 'Channels arcane formulas into devastating spell-damage.',
-    bonusHp: 0,
-    bonusAttack: 3,
-  },
-  {
-    id: 'warrior',
-    name: 'Study Warrior',
-    emoji: '⚔️',
-    description: 'Tanky and relentless — built to outlast tough exams.',
-    bonusHp: 15,
-    bonusAttack: 0,
-  },
-  {
-    id: 'ranger',
-    name: 'Research Ranger',
-    emoji: '🏹',
-    description: 'Balanced and quick, thrives on streaks of correct answers.',
-    bonusHp: 5,
-    bonusAttack: 1,
-  },
-  {
-    id: 'scholar',
-    name: 'Archivist Scholar',
-    emoji: '📚',
-    description: 'Earns bonus gold and XP from every correct answer.',
-    bonusHp: 5,
-    bonusAttack: 1,
+    id: 'physics',
+    name: 'Physics',
+    shortName: 'PHYS',
+    fullApName: 'AP Physics 1',
+    emoji: '🧲',
+    color: '#ef4444',
+    glow: 'rgba(239,68,68,0.55)',
+    zoneName: "Newton's Proving Grounds",
+    zoneDescription: 'Forces, motion, and energy collide on this battle-scarred field.',
+    mapPosition: { x: 6, y: 7 },
+    battleStyle: 'fbd',
+    monsters: [
+      { name: 'Friction Fiend', emoji: '🌀', hp: 32 },
+      { name: 'Gravity Golem', emoji: '🪨', hp: 44 },
+      { name: 'Momentum Menace', emoji: '💥', hp: 58 },
+    ],
+    fbdCategories: {
+      up: { label: 'Kinematics', units: ['Kinematics'] },
+      down: { label: "Forces & Newton's Laws", units: ["Newton's Laws & Forces"] },
+      left: { label: 'Energy & Work', units: ['Energy & Work'] },
+      right: { label: 'Momentum & Circular Motion', units: ['Momentum & Circular Motion'] },
+    },
   },
 ]
 

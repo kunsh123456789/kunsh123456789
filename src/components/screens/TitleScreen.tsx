@@ -40,7 +40,7 @@ export function TitleScreen() {
       </div>
 
       <p className="mt-12 text-xs text-slate-600 font-pixel">
-        AP BIO · AP CALC AB · AP CHEM · AP US HIST · AP CS A
+        AP BIO · AP CALC AB · AP CHEM · AP US HIST · AP CS A · AP PHYSICS 1
       </p>
     </div>
   )

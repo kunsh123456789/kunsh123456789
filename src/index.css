@@ -111,3 +111,48 @@ body {
 .animate-bob {
   animation: bob 1.6s ease-in-out infinite;
 }
+
+@keyframes lunge {
+  0% {
+    transform: translateX(0);
+  }
+  40% {
+    transform: translateX(28px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+.animate-lunge {
+  animation: lunge 0.5s ease-in-out;
+}
+
+@keyframes monster-lunge {
+  0% {
+    transform: translateX(0);
+  }
+  40% {
+    transform: translateX(-28px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+.animate-monster-lunge {
+  animation: monster-lunge 0.5s ease-in-out;
+}
+
+@keyframes lunge-left {
+  0% {
+    transform: scaleX(-1) translateX(0);
+  }
+  40% {
+    transform: scaleX(-1) translateX(28px);
+  }
+  100% {
+    transform: scaleX(-1) translateX(0);
+  }
+}
+.animate-lunge-left {
+  animation: lunge-left 0.5s ease-in-out;
+}

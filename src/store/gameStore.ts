@@ -1,18 +1,18 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { AVATAR_CLASSES, getSubject, HUB_POSITION, MAP_HEIGHT, MAP_WIDTH, SUBJECTS } from '../data/subjects'
-import { drawQuestions } from '../data/questions'
+import { getSubject, HUB_POSITION, MAP_HEIGHT, MAP_WIDTH, SUBJECTS } from '../data/subjects'
+import { drawOneQuestion, drawQuestions } from '../data/questions'
 import type {
-  AvatarId,
+  Appearance,
   BattleQuestionResult,
   BattleState,
+  Direction,
   Player,
   Screen,
   SubjectId,
   SubjectMastery,
 } from '../types'
 
-const QUESTIONS_PER_DRAW = 5
 const BASE_HP = 30
 const BASE_ATTACK = 8
 
@@ -24,19 +24,18 @@ function xpToNextForLevel(level: number): number {
   return 50 + (level - 1) * 30
 }
 
-function makePlayer(name: string, avatar: AvatarId): Player {
-  const cls = AVATAR_CLASSES.find((c) => c.id === avatar) ?? AVATAR_CLASSES[0]
+function makePlayer(name: string, appearance: Appearance): Player {
   const mastery = {} as Record<SubjectId, SubjectMastery>
   for (const s of SUBJECTS) mastery[s.id] = emptyMastery()
   return {
     name: name.trim() || 'Adventurer',
-    avatar,
+    appearance,
     level: 1,
     xp: 0,
     xpToNext: xpToNextForLevel(1),
-    hp: BASE_HP + cls.bonusHp,
-    maxHp: BASE_HP + cls.bonusHp,
-    attack: BASE_ATTACK + cls.bonusAttack,
+    hp: BASE_HP,
+    maxHp: BASE_HP,
+    attack: BASE_ATTACK,
     gold: 0,
     position: { ...HUB_POSITION },
     mastery,
@@ -60,14 +59,16 @@ interface GameStore {
   lastLevelUp: number | null
 
   newGame: () => void
-  createPlayer: (name: string, avatar: AvatarId) => void
+  continueToCreate: () => void
+  createPlayer: (name: string, appearance: Appearance) => void
   continueGame: () => void
   resetGame: () => void
 
   movePlayer: (dx: number, dy: number) => void
   startBattle: (subjectId: SubjectId) => void
+  chooseDirection: (direction: Direction) => void
   selectAnswer: (choiceIndex: number) => void
-  nextQuestion: () => void
+  nextTurn: () => void
   acknowledgeBattleEnd: () => void
   clearLevelUp: () => void
 }
@@ -80,16 +81,18 @@ export const useGameStore = create<GameStore>()(
       battle: null,
       lastLevelUp: null,
 
-      newGame: () => set({ screen: 'create' }),
+      newGame: () => set({ screen: 'intro' }),
 
-      createPlayer: (name, avatar) => {
-        set({ player: makePlayer(name, avatar), screen: 'overworld', battle: null })
+      continueToCreate: () => set({ screen: 'create' }),
+
+      createPlayer: (name, appearance) => {
+        set({ player: makePlayer(name, appearance), screen: 'overworld', battle: null })
       },
 
       continueGame: () => {
         const { player } = get()
         if (player) set({ screen: 'overworld' })
-        else set({ screen: 'create' })
+        else set({ screen: 'intro' })
       },
 
       resetGame: () => set({ player: null, battle: null, screen: 'title', lastLevelUp: null }),
@@ -111,14 +114,20 @@ export const useGameStore = create<GameStore>()(
       startBattle: (subjectId) => {
         const { player } = get()
         if (!player) return
+        const subject = getSubject(subjectId)
+        if (!subject) return
         const { monster, hp } = pickMonster(subjectId, player.level)
+
+        const isFbd = subject.battleStyle === 'fbd'
         const battle: BattleState = {
           subjectId,
           monster,
           monsterHp: hp,
           monsterMaxHp: hp,
-          questions: drawQuestions(subjectId, QUESTIONS_PER_DRAW),
-          questionIndex: 0,
+          phase: isFbd ? 'select' : 'question',
+          currentQuestion: isFbd ? null : drawQuestions(subjectId, 1)[0],
+          usedQuestionIds: [],
+          lastDirection: null,
           streak: 0,
           selectedChoice: null,
           result: null,
@@ -129,10 +138,29 @@ export const useGameStore = create<GameStore>()(
         set({ battle, screen: 'battle' })
       },
 
+      chooseDirection: (direction) => {
+        const { battle } = get()
+        if (!battle || battle.phase !== 'select') return
+        const subject = getSubject(battle.subjectId)
+        if (!subject?.fbdCategories) return
+        const category = subject.fbdCategories[direction]
+        const question = drawOneQuestion(battle.subjectId, battle.usedQuestionIds, category.units)
+        set({
+          battle: {
+            ...battle,
+            phase: 'question',
+            currentQuestion: question,
+            lastDirection: direction,
+            selectedChoice: null,
+            result: null,
+          },
+        })
+      },
+
       selectAnswer: (choiceIndex) => {
         const { battle, player } = get()
-        if (!battle || !player || battle.result !== null) return
-        const question = battle.questions[battle.questionIndex]
+        if (!battle || !player || !battle.currentQuestion || battle.result !== null) return
+        const question = battle.currentQuestion
         const correct = choiceIndex === question.correctIndex
         const result: BattleQuestionResult = correct ? 'correct' : 'incorrect'
 
@@ -159,21 +187,25 @@ export const useGameStore = create<GameStore>()(
         mastery[battle.subjectId] = subjMastery
 
         set({
-          battle: { ...battle, monsterHp, streak, selectedChoice: choiceIndex, result },
+          battle: {
+            ...battle,
+            monsterHp,
+            streak,
+            selectedChoice: choiceIndex,
+            result,
+            usedQuestionIds: [...battle.usedQuestionIds, question.id],
+          },
           player: { ...player, hp: playerHp, mastery },
         })
       },
 
-      nextQuestion: () => {
+      nextTurn: () => {
         const { battle, player } = get()
         if (!battle || !player) return
 
         if (battle.monsterHp <= 0) {
           const goldEarned = 15 + Math.round(battle.monsterMaxHp / 2)
           const xpEarned = 20 + Math.round(battle.monsterMaxHp / 2)
-          const classBonus = player.avatar === 'scholar' ? 1.25 : 1
-          const finalGold = Math.round(goldEarned * classBonus)
-          const finalXp = Math.round(xpEarned * classBonus)
 
           const mastery = { ...player.mastery }
           mastery[battle.subjectId] = {
@@ -181,7 +213,7 @@ export const useGameStore = create<GameStore>()(
             battlesWon: mastery[battle.subjectId].battlesWon + 1,
           }
 
-          let xp = player.xp + finalXp
+          let xp = player.xp + xpEarned
           let level = player.level
           let maxHp = player.maxHp
           let attack = player.attack
@@ -200,8 +232,8 @@ export const useGameStore = create<GameStore>()(
           const hp = leveledUp ? maxHp : player.hp
 
           set({
-            player: { ...player, gold: player.gold + finalGold, xp, level, maxHp, attack, xpToNext, hp, mastery },
-            battle: { ...battle, goldEarned: finalGold, xpEarned: finalXp },
+            player: { ...player, gold: player.gold + goldEarned, xp, level, maxHp, attack, xpToNext, hp, mastery },
+            battle: { ...battle, goldEarned, xpEarned },
             screen: 'victory',
             lastLevelUp: leveledUp ? level : null,
           })
@@ -217,14 +249,17 @@ export const useGameStore = create<GameStore>()(
           return
         }
 
-        let { questions, questionIndex } = battle
-        questionIndex += 1
-        if (questionIndex >= questions.length) {
-          questions = [...questions, ...drawQuestions(battle.subjectId, QUESTIONS_PER_DRAW)]
-        }
+        const subject = getSubject(battle.subjectId)
+        const isFbd = subject?.battleStyle === 'fbd'
 
         set({
-          battle: { ...battle, questions, questionIndex, selectedChoice: null, result: null },
+          battle: {
+            ...battle,
+            phase: isFbd ? 'select' : 'question',
+            currentQuestion: isFbd ? null : drawOneQuestion(battle.subjectId, battle.usedQuestionIds),
+            selectedChoice: null,
+            result: null,
+          },
         })
       },
 

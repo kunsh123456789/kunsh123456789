@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
-import { AVATAR_CLASSES, HUB_POSITION, MAP_HEIGHT, MAP_WIDTH, SUBJECTS } from '../../data/subjects'
+import { HUB_POSITION, MAP_HEIGHT, MAP_WIDTH, SUBJECTS } from '../../data/subjects'
 import { useGameStore } from '../../store/gameStore'
+import { PlayerSprite } from '../sprites/PlayerSprite'
 import { StatBar } from '../ui/StatBar'
 
 const TILE = 44
@@ -32,17 +33,18 @@ export function OverworldScreen() {
   }, [movePlayer])
 
   if (!player) return null
-  const avatarInfo = AVATAR_CLASSES.find((c) => c.id === player.avatar)
 
   return (
     <div className="min-h-screen bg-[#0b1020] flex flex-col">
       {/* HUD */}
       <div className="pixel-border bg-slate-900/90 m-2 rounded-lg p-3 flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2">
-          <span className="text-3xl">{avatarInfo?.emoji}</span>
+          <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
+            <PlayerSprite appearance={player.appearance} size={36} pose="idle" />
+          </div>
           <div>
             <div className="font-pixel text-[11px] text-white">{player.name}</div>
-            <div className="font-pixel text-[9px] text-violet-300">Lv.{player.level} {avatarInfo?.name}</div>
+            <div className="font-pixel text-[9px] text-violet-300">Lv.{player.level} Adventurer</div>
           </div>
         </div>
         <div className="w-40">
@@ -118,7 +120,7 @@ export function OverworldScreen() {
 
             {/* player */}
             <div
-              className="flex items-center justify-center text-2xl transition-all duration-150 ease-out z-10"
+              className="flex items-end justify-center overflow-visible transition-all duration-150 ease-out z-10"
               style={{
                 position: 'absolute',
                 left: player.position.x * TILE,
@@ -127,7 +129,7 @@ export function OverworldScreen() {
                 height: TILE,
               }}
             >
-              {avatarInfo?.emoji}
+              <PlayerSprite appearance={player.appearance} size={28} pose="idle" />
             </div>
           </div>
         </div>
