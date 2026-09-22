@@ -1,6 +1,7 @@
 import { getSubject } from '../../data/subjects'
 import { useGameStore } from '../../store/gameStore'
 import { FBDSelector } from '../battle/FBDSelector'
+import { MonsterSprite } from '../sprites/MonsterSprite'
 import { PlayerSprite } from '../sprites/PlayerSprite'
 import { StatBar } from '../ui/StatBar'
 import { PixelButton } from '../ui/PixelButton'
@@ -20,8 +21,7 @@ export function BattleScreen() {
   const answered = battle.result !== null
 
   const playerPose = battle.result === 'correct' ? 'attack' : battle.result === 'incorrect' ? 'hit' : 'idle'
-  const monsterClass =
-    battle.result === 'correct' ? 'animate-shake' : battle.result === 'incorrect' ? 'animate-monster-lunge' : 'animate-bob'
+  const monsterPose = battle.result === 'correct' ? 'hit' : battle.result === 'incorrect' ? 'attack' : 'idle'
 
   return (
     <div
@@ -46,10 +46,10 @@ export function BattleScreen() {
       <div className="relative h-52 sm:h-64 mx-3 rounded-lg overflow-hidden pixel-border bg-slate-900/40">
         <div className="absolute inset-x-0 bottom-0 h-10 bg-black/30 border-t-4 border-black/40" />
         <div className="absolute bottom-8 left-6 sm:left-12">
-          <PlayerSprite appearance={player.appearance} size={110} facing="right" pose={playerPose} />
+          <PlayerSprite appearance={player.appearance} size={12} pose={playerPose} />
         </div>
-        <div className={`absolute bottom-8 right-6 sm:right-16 text-7xl sm:text-8xl leading-none ${monsterClass}`}>
-          {battle.monster.emoji}
+        <div className="absolute bottom-8 right-6 sm:right-16">
+          <MonsterSprite monster={battle.monster} color={subject.color} size={12} pose={monsterPose} />
         </div>
       </div>
 

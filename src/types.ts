@@ -15,10 +15,13 @@ export interface Question {
   explanation: string
 }
 
+export type MonsterArchetype = 'blob' | 'golem' | 'winged' | 'spirit'
+
 export interface Monster {
   name: string
   emoji: string
   hp: number
+  archetype: MonsterArchetype
 }
 
 export type Direction = 'up' | 'down' | 'left' | 'right'

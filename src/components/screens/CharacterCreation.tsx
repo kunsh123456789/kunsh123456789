@@ -84,7 +84,7 @@ export function CharacterCreation() {
         {/* live preview */}
         <div className="flex flex-col items-center justify-start gap-3">
           <div className="pixel-border bg-slate-800/60 rounded-lg p-4 flex items-center justify-center w-full h-56">
-            <PlayerSprite appearance={appearance} size={110} pose="idle" />
+            <PlayerSprite appearance={appearance} size={14} pose="idle" />
           </div>
           <input
             value={name}

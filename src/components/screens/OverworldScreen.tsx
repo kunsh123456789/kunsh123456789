@@ -40,7 +40,7 @@ export function OverworldScreen() {
       <div className="pixel-border bg-slate-900/90 m-2 rounded-lg p-3 flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
-            <PlayerSprite appearance={player.appearance} size={36} pose="idle" />
+            <PlayerSprite appearance={player.appearance} size={4} pose="idle" />
           </div>
           <div>
             <div className="font-pixel text-[11px] text-white">{player.name}</div>
@@ -129,7 +129,7 @@ export function OverworldScreen() {
                 height: TILE,
               }}
             >
-              <PlayerSprite appearance={player.appearance} size={28} pose="idle" />
+              <PlayerSprite appearance={player.appearance} size={3.2} pose="idle" />
             </div>
           </div>
         </div>

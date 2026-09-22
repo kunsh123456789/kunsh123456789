@@ -18,9 +18,9 @@ export const SUBJECTS: Subject[] = [
     mapPosition: { x: 2, y: 2 },
     battleStyle: 'quiz',
     monsters: [
-      { name: 'Mitosis Mite', emoji: '🦠', hp: 30 },
-      { name: 'Photosynthesis Treant', emoji: '🌳', hp: 40 },
-      { name: 'Evolution Wyrm', emoji: '🐉', hp: 55 },
+      { name: 'Mitosis Mite', emoji: '🦠', hp: 30, archetype: 'blob' },
+      { name: 'Photosynthesis Treant', emoji: '🌳', hp: 40, archetype: 'golem' },
+      { name: 'Evolution Wyrm', emoji: '🐉', hp: 55, archetype: 'winged' },
     ],
   },
   {
@@ -36,9 +36,9 @@ export const SUBJECTS: Subject[] = [
     mapPosition: { x: 10, y: 2 },
     battleStyle: 'quiz',
     monsters: [
-      { name: 'Limit Golem', emoji: '🗿', hp: 32 },
-      { name: 'Tangent Gargoyle', emoji: '🦇', hp: 42 },
-      { name: 'Integral Dragon', emoji: '🐲', hp: 58 },
+      { name: 'Limit Golem', emoji: '🗿', hp: 32, archetype: 'golem' },
+      { name: 'Tangent Gargoyle', emoji: '🦇', hp: 42, archetype: 'winged' },
+      { name: 'Integral Dragon', emoji: '🐲', hp: 58, archetype: 'winged' },
     ],
   },
   {
@@ -54,9 +54,9 @@ export const SUBJECTS: Subject[] = [
     mapPosition: { x: 6, y: 1 },
     battleStyle: 'quiz',
     monsters: [
-      { name: 'Mole Rat', emoji: '🐀', hp: 28 },
-      { name: 'Bonding Beast', emoji: '👾', hp: 40 },
-      { name: 'Equilibrium Elemental', emoji: '🔥', hp: 54 },
+      { name: 'Mole Rat', emoji: '🐀', hp: 28, archetype: 'blob' },
+      { name: 'Bonding Beast', emoji: '👾', hp: 40, archetype: 'golem' },
+      { name: 'Equilibrium Elemental', emoji: '🔥', hp: 54, archetype: 'spirit' },
     ],
   },
   {
@@ -72,9 +72,9 @@ export const SUBJECTS: Subject[] = [
     mapPosition: { x: 2, y: 6 },
     battleStyle: 'quiz',
     monsters: [
-      { name: 'Colonial Sentry', emoji: '🛡️', hp: 30 },
-      { name: 'Revolution Redcoat', emoji: '🎖️', hp: 42 },
-      { name: 'Gilded Age Titan', emoji: '🏛️', hp: 56 },
+      { name: 'Colonial Sentry', emoji: '🛡️', hp: 30, archetype: 'golem' },
+      { name: 'Revolution Redcoat', emoji: '🎖️', hp: 42, archetype: 'golem' },
+      { name: 'Gilded Age Titan', emoji: '🏛️', hp: 56, archetype: 'golem' },
     ],
   },
   {
@@ -90,9 +90,9 @@ export const SUBJECTS: Subject[] = [
     mapPosition: { x: 10, y: 6 },
     battleStyle: 'quiz',
     monsters: [
-      { name: 'Null Pointer Ghost', emoji: '👻', hp: 30 },
-      { name: 'Infinite Loop Hydra', emoji: '🐙', hp: 44 },
-      { name: 'Stack Overflow Kraken', emoji: '🦑', hp: 58 },
+      { name: 'Null Pointer Ghost', emoji: '👻', hp: 30, archetype: 'spirit' },
+      { name: 'Infinite Loop Hydra', emoji: '🐙', hp: 44, archetype: 'winged' },
+      { name: 'Stack Overflow Kraken', emoji: '🦑', hp: 58, archetype: 'winged' },
     ],
   },
   {
@@ -108,9 +108,9 @@ export const SUBJECTS: Subject[] = [
     mapPosition: { x: 6, y: 7 },
     battleStyle: 'fbd',
     monsters: [
-      { name: 'Friction Fiend', emoji: '🌀', hp: 32 },
-      { name: 'Gravity Golem', emoji: '🪨', hp: 44 },
-      { name: 'Momentum Menace', emoji: '💥', hp: 58 },
+      { name: 'Friction Fiend', emoji: '🌀', hp: 32, archetype: 'blob' },
+      { name: 'Gravity Golem', emoji: '🪨', hp: 44, archetype: 'golem' },
+      { name: 'Momentum Menace', emoji: '💥', hp: 58, archetype: 'winged' },
     ],
     fbdCategories: {
       up: { label: 'Kinematics', units: ['Kinematics'] },
